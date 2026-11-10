@@ -459,8 +459,9 @@ export default class GitList extends View {
   }
 
   // The panel just showed (cmd-shift-g, the Changes button), and the tab
-  // has no diff pane (hiding it closed them): from a fresh status, the
-  // selected file, else the first one, opens there, as the TUI's toggle did.
+  // has no diff pane (hiding it closed them): from a fresh status, nothing
+  // opens and nothing is selected (fork: upstream opened the selected file,
+  // else the first one); a click or j/k opens a diff.
   openOnShow(cx) {
     // A status for this place under a second old is fresh enough.
     const same = this.loadedKey === this.context().key;
@@ -472,16 +473,10 @@ export default class GitList extends View {
     const rec = handoffIn(tab);
     if (rec && !this.restorable(tab, rec)) setHandoff(tab, null);
     if (!tab || diffPane(tab) || (rec && this.restorable(tab, rec))) return;
-    // The list it kept while hidden: its file at once (the refresh corrects
-    // it if it moved meanwhile: followSelection).
-    const known = same && this.list()?.shownFile();
-    if (known) return this.select(known, cx);
-    cx.spawn(async (cx) => {
-      await this.loads.idle(cx);
-      const row = this.list()?.shownFile();
-      if (row && this.place.shown() && this.tab() === tab && !diffPane(tab)) this.select(row, cx);
-      cx.notify();
-    });
+    // The tab's last view goes too, else the refresh's followSelection
+    // selects its file again.
+    this.list()?.select(null);
+    if (liveView(viewIn(tab))) this.writeView(tab, null);
   }
 
   // `poll`: a timer's look; in branch scope the base found last time is
