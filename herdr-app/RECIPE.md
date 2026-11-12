@@ -96,8 +96,7 @@ of it out and brings back the stock Changes panel.
   (staged or unstaged diffs only); `s`/`u`/`x` act on the shown file; `J`/`K`
   the next or previous file (the list follows); `m` Diff or Preview; `enter`
   the editor at the cursor's line; `esc` clears the selection.
-- **Enter → the editor**, which takes the diff pane's place (as v1's diff
-  pane became nvim):
+- **Enter → the editor**, which takes the diff pane's place:
   - the editor: herdr-nvim's nvim when it's installed; else an nvim already
     in the tab; else the one configured (`editor` in config.toml, `$VISUAL`,
     `$EDITOR`, nvim, vim, vi), started in a terminal in the diff's place;
